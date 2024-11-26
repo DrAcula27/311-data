@@ -583,7 +583,7 @@ class Map extends React.Component {
       }
 
       if (
-        hoverables.includes(feature.layer.id) &&
+        feature.layer.id == 'nc-fills' &&
         !feature.state.selected
       ) {
         switch (feature.layer.id) {
