@@ -26,7 +26,7 @@ import CookieNotice from '../main/CookieNotice';
 import Map from './Map';
 import moment from 'moment';
 import ddbh from '@utils/duckDbHelpers.js';
-import DbContext from '@db/DbContext';
+import { DbContext, DbRequests } from '@db/DbContext';
 import AcknowledgeModal from '../Loading/AcknowledgeModal';
 
 // We make API requests on a per-day basis. On average, there are about 4k
@@ -66,35 +66,37 @@ class MapContainer extends React.Component {
     this.endTime = 0;
   }
 
-  createRequestsTable = async () => {
-    this.setState({ isTableLoading: true });
-    const { conn, tableNameByYear, setDbStartTime } = this.context;
-    const startDate = this.props.startDate; // directly use the startDate prop transformed for redux store
-    const year = moment(startDate).year(); // extract the year
-    const datasetFileName = `requests${year}.parquet`;
+  loadRequestsTable = async () => {
+    // this.setState({ isTableLoading: true });
+    // const { conn, tableNameByYear, setDbStartTime } = this.context;
+    // const startDate = this.props.startDate; // directly use the startDate prop transformed for redux store
+    // const year = moment(startDate).year(); // extract the year
+    // const datasetFileName = `requests${year}.parquet`;
 
-    // Create the year data table if not exist already
-    const createSQL =
-      `CREATE TABLE IF NOT EXISTS ${tableNameByYear} AS SELECT * FROM "${datasetFileName}"`; // query from parquet
+    // // Create the year data table if not exist already
+    // const createSQL =
+    //   `CREATE TABLE IF NOT EXISTS ${tableNameByYear} AS SELECT * FROM "${datasetFileName}"`; // query from parquet
 
-    const startTime = performance.now(); // start the time tracker
-    setDbStartTime(startTime)
+    // const startTime = performance.now(); // start the time tracker
+    // setDbStartTime(startTime)
 
-      try {
-        await conn.query(createSQL);
-        const endTime = performance.now() // end the timer
-        console.log(`Dataset registration & table creation (by year) time: ${Math.floor(endTime - startTime)} ms.`);
-      } catch (error) {
-        console.error("Error in creating table or registering dataset:", error);
-      } finally {
-        this.setState({ isTableLoading: false});
-      }
+    //   try {
+    //     await conn.query(createSQL);
+    //     const endTime = performance.now() // end the timer
+    //     console.log(`Dataset registration & table creation (by year) time: ${Math.floor(endTime - startTime)} ms.`);
+    //   } catch (error) {
+    //     console.error("Error in creating table or registering dataset:", error);
+    //   } finally {
+    //     this.setState({ isTableLoading: false});
+    //   }
+    //* above is old, moved to components/db/DbRequests.jsx
+    //TODO: write code to get the table and load data
   };
 
   async componentDidMount(props) {
     this.isSubscribed = true;
     this.processSearchParams();
-    await this.createRequestsTable();
+    await this.loadRequestsTable();
     await this.setData();
   }
 
@@ -114,7 +116,7 @@ class MapContainer extends React.Component {
       prevProps.pins !== pins ||
       didDateRangeChange
     ) {
-      await this.createRequestsTable();
+      await this.loadRequestsTable();
       await this.setData();
     }
   }
