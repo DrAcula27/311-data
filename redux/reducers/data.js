@@ -1,6 +1,6 @@
 export const types = {
-  GET_DB_REQUEST: 'GET_DB_REQUEST',
-  GET_DB_REQUEST_SUCCESS: 'GET_DB_REQUEST_SUCCESS',
+  // GET_DB_REQUEST: 'GET_DB_REQUEST',
+  // GET_DB_REQUEST_SUCCESS: 'GET_DB_REQUEST_SUCCESS',
   GET_DATA_REQUEST: 'GET_DATA_REQUEST',
   GET_DATA_REQUEST_SUCCESS: 'GET_DATA_REQUEST_SUCCESS',
   UPDATE_DATE_RANGES: 'UPDATE_DATE_RANGES',
@@ -27,14 +27,14 @@ export const types = {
   GIT_RESPONSE_FAILURE: 'GIT_RESPONSE_FAILURE',
 };
 
-export const getDbRequest = () => ({
-  type: types.GET_DB_REQUEST,
-});
+// export const getDbRequest = () => ({
+//   type: types.GET_DB_REQUEST,
+// });
 
-export const getDbRequestSuccess = response => ({
-  type: types.GET_DB_REQUEST_SUCCESS,
-  payload: response,
-});
+// export const getDbRequestSuccess = response => ({
+//   type: types.GET_DB_REQUEST_SUCCESS,
+//   payload: response,
+// });
 
 export const getDataRequest = () => ({
   type: types.GET_DATA_REQUEST,

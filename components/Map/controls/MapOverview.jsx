@@ -7,9 +7,9 @@ import { updateMapDateRange } from '@reducers/mapFilters';
 import clx from 'classnames';
 
 import moment from 'moment';
-import RequestsDonut from './RequestsDonut';
+// import RequestsDonut from './RequestsDonut';
 import RequestsBarChart from './RequestsBarChart';
-import Button from '@components/common/Button';
+// import Button from '@components/common/Button';
 
 import {
   setMapMode as reduxSetMapMode,
@@ -141,10 +141,10 @@ const MapOverview = ({
       </div>
 
       {/*<RequestsBarChart selectedRequests={selectedRequests} />*/}
-      <RequestsDonut
+      {/* <RequestsDonut
         selectedRequests={selectedRequests}
         colorScheme={colorScheme}
-      />
+      /> */}
     </div>
   );
 };

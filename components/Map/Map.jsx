@@ -140,6 +140,7 @@ class Map extends React.Component {
     this.isSubscribed = null;
     this.initialState = props.initialState;
     this.hasSetInitialNCView = false;
+    this.isRequestsTableLoading = false;
   }
 
   componentDidMount() {

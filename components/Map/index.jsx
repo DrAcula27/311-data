@@ -4,8 +4,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import withStyles from '@mui/styles/withStyles';
 import {
-  getDbRequest,
-  getDbRequestSuccess,
+  // getDbRequest,
+  // getDbRequestSuccess,
   getDataRequest,
   getDataRequestSuccess,
   updateDateRanges,
@@ -26,7 +26,8 @@ import CookieNotice from '../main/CookieNotice';
 import Map from './Map';
 import moment from 'moment';
 import ddbh from '@utils/duckDbHelpers.js';
-import { DbContext, DbRequests } from '@db/DbContext';
+import DbContext from '@db/DbContext';
+import createRequestsTable from '@db/DbRequests';
 import AcknowledgeModal from '../Loading/AcknowledgeModal';
 
 // We make API requests on a per-day basis. On average, there are about 4k
@@ -91,6 +92,11 @@ class MapContainer extends React.Component {
     //   }
     //* above is old, moved to components/db/DbRequests.jsx
     //TODO: write code to get the table and load data
+    console.log('startDate: ', this.props.startDate);
+
+    console.log('loadRequestsTable ran');
+
+    createRequestsTable(this.props.startDate);
   };
 
   async componentDidMount(props) {
@@ -317,7 +323,8 @@ class MapContainer extends React.Component {
 
   async getAllRequests(startDate, endDate) {
     const { conn } = this.context;
-    const startYear = moment(startDate).year();
+    // const startYear = moment(startDate).year();
+    const startYear = '2024';
     const endYear = moment(endDate).year();
 
     let selectSQL = '';
@@ -367,7 +374,7 @@ class MapContainer extends React.Component {
       return;
     }
     dispatchGetDataRequest(); // set isMapLoading in redux stat.data to true
-    dispatchGetDbRequest(); // set isDbLoading in redux state.data to true
+    // dispatchGetDbRequest(); // set isDbLoading in redux state.data to true
     this.rawRequests = await this.getAllRequests(startDate, endDate);
 
     if (this.isSubscribed) {
@@ -380,7 +387,7 @@ class MapContainer extends React.Component {
       // load map features/requests upon successful map load
       dispatchGetDataRequestSuccess(convertedRequests);
       // set isDbLoading in redux state.data to false
-      dispatchGetDbRequestSuccess();
+      // dispatchGetDbRequestSuccess();
       const newDateRangesWithRequests =
         this.resolveDateRanges(missingDateRanges);
       dispatchUpdateDateRanges(newDateRangesWithRequests);
@@ -481,8 +488,8 @@ const mapDispatchToProps = (dispatch) => ({
   dispatchUpdateMapPosition: (position) =>
     dispatch(updateMapPosition(position)),
   dispatchTrackMapExport: () => dispatch(trackMapExport()),
-  dispatchGetDbRequest: () => dispatch(getDbRequest()),
-  dispatchGetDbRequestSuccess: (data) => dispatch(getDbRequestSuccess()),
+  // dispatchGetDbRequest: () => dispatch(getDbRequest()),
+  // dispatchGetDbRequestSuccess: (data) => dispatch(getDbRequestSuccess()),
   dispatchGetDataRequest: () => dispatch(getDataRequest()),
   dispatchGetDataRequestSuccess: (data) =>
     dispatch(getDataRequestSuccess(data)),

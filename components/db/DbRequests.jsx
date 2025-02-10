@@ -1,17 +1,25 @@
-import React, { useEffect, useState } from 'react';
-import DbContext from '@db/DbContext';
+import React, { useEffect, useContext } from 'react';
+import DbContext from './DbContext';
 import DbProvider from './DbProvider';
 import moment from 'moment';
 
-const createRequestsTable = async () => {
-  this.setState({ isTableLoading: true });
-  const { conn, setDbStartTime } = this.context; // removed tableNameByYear
-  const startDate = this.props.startDate; // directly use the startDate prop transformed for redux store
+import Map from '../Map/Map';
+// import MapContainer from '../Map/index';
+// import MapOverview from '../Map/controls/MapOverview';
+// import {dispatch} from '@root/redux/store';
+
+const createRequestsTable = async (startDateProp) => {
+  Map.isRequestsTableLoading = true;
+  console.log('Map.isRequestsTableLoading: ' + Map.isRequestsTableLoading);
+  console.log('dbcontext: ', DbContext._currentValue.conn);
+
+  // const { conn, setDbStartTime } = useContext(DbContext); // removed tableNameByYear
+  const startDate = startDateProp;
   const year = moment(startDate).year(); // extract the year
   const datasetFileName = `requests${year}.parquet`;
 
   //define table columns
-  // `updateHfDataset.py` to clean each year's data such that they conform to this model.
+  //* `updateHfDataset.py` to clean each year's data such that they conform to this model.
   const colNames = `
     SRNumber VARCHAR,
     CreatedDate DATETIME,
@@ -54,18 +62,20 @@ const createRequestsTable = async () => {
   const createSQL =
     `CREATE TABLE IF NOT EXISTS requests (${colNames})`; // query from parquet
 
-  const startTime = performance.now(); // start the time tracker
-  setDbStartTime(startTime)
+  // const startTime = performance.now(); // start the time tracker
+  // setDbStartTime(startTime)
 
-    try {
-      await conn.query(createSQL);
-      const endTime = performance.now() // end the timer
-      console.log(`Dataset registration & table creation (by year) time: ${Math.floor(endTime - startTime)} ms.`);
-    } catch (error) {
-      console.error("Error in creating table or registering dataset:", error);
-    } finally {
-      this.setState({ isTableLoading: false});
-    }
+  try {
+    console.log('dbcontextTRY: ', DbContext._currentValue.conn);
+    // await conn.query(createSQL);
+    await DbContext._currentValue.conn.query(createSQL);
+    // const endTime = performance.now() // end the timer
+    // console.log(`Dataset registration & table creation (by year) time: ${Math.floor(endTime - startTime)} ms.`);
+  } catch (error) {
+    console.error("Error in creating table or registering dataset:", error);
+  } finally {
+    console.log('finally');
+  }
 };
 
 export default createRequestsTable;

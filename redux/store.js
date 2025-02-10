@@ -9,6 +9,7 @@ import rootSaga from './rootSaga';
 const sagaMiddleware = createSagaMiddleware();
 const middlewares = [sagaMiddleware];
 
+
 if (import.meta.env.DEV) {
   const logger = createLogger({
     collapsed: (getState, action, logEntry) => !logEntry.error,
@@ -19,6 +20,8 @@ if (import.meta.env.DEV) {
 const store = createStore(rootReducer, composeWithDevToolsDevelopmentOnly(
   applyMiddleware(...middlewares),
 ));
+
+export const dispatch = store.dispatch;
 
 sagaMiddleware.run(rootSaga);
 
