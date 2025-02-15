@@ -72,6 +72,7 @@ class MapContainer extends React.Component {
     this.processSearchParams();
     await createRequestsTable({ conn: this.context.conn, setDbStartTime: this.context.setDbStartTime }, this.setState.bind(this));
     await this.setData();
+    await this.testFetchData();
   }
 
   async componentDidUpdate(prevProps) {
@@ -92,6 +93,7 @@ class MapContainer extends React.Component {
     ) {
       await createRequestsTable({ conn: this.context.conn, setDbStartTime: this.context.setDbStartTime }, this.setState.bind(this));
       await this.setData();
+      await this.testFetchData();
     }
   }
 
@@ -335,6 +337,14 @@ class MapContainer extends React.Component {
       dispatchUpdateDateRanges(newDateRangesWithRequests);
     }
   };
+
+  testFetchData = async () => {
+    const data = await fetchData(
+      { conn: this.context.conn },
+      { startDate: "2023-01-01", endDate: "2023-12-31", requestType: "Graffiti" }
+    );
+    console.log(`testFetchData ran in components/Map/index.jsx`);
+  }
 
   convertRequests = (requests) =>
     requests.map((request) => {
