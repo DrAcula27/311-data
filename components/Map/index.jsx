@@ -28,7 +28,7 @@ import moment from 'moment';
 import ddbh from '@utils/duckDbHelpers.js';
 import DbContext from '@db/DbContext';
 import AcknowledgeModal from '../Loading/AcknowledgeModal';
-import createRequestsTable from '../db/DbRequest';
+import { createRequestsTable, fetchData } from '../db/DbRequests';
 
 // We make API requests on a per-day basis. On average, there are about 4k
 // requests per day, so 10k is a large safety margin.
@@ -95,7 +95,7 @@ class MapContainer extends React.Component {
   async componentDidMount(props) {
     this.isSubscribed = true;
     this.processSearchParams();
-    await createRequestsTable(this.context, this.props, this.setState.bind(this));
+    await createRequestsTable({ conn: this.context.conn, setDbStartTime: this.context.setDbStartTime }, this.setState.bind(this));
     await this.setData();
   }
 
@@ -115,7 +115,7 @@ class MapContainer extends React.Component {
       prevProps.pins !== pins ||
       didDateRangeChange
     ) {
-      await createRequestsTable(this.context, this.props, this.setState.bind(this));
+      await createRequestsTable({ conn: this.context.conn, setDbStartTime: this.context.setDbStartTime }, this.setState.bind(this));
       await this.setData();
     }
   }
