@@ -1,11 +1,13 @@
-import moment from 'moment';
+// import moment from 'moment';
 
+// passed ALL THE THINGS for now. Once working as intended, see if can reduce what is passed to optimize
+//  - e.g., just pass conn, setDbStartTime instead of entire context
 const createRequestsTable = async (context, props, setState) => {
   setState({ isTableLoading: true });
 
-  const { conn, tableNameByYear, setDbStartTime } = context;
+  const { conn, setDbStartTime } = context;
   const startDate = props.startDate; // directly use the startDate prop transformed for redux store
-  const year = moment(startDate).year(); // extract the year
+  // const year = moment(startDate).year(); // extract the year
   // const datasetFileName = `requests${year}.parquet`;
 
   // const createSQL =
@@ -13,7 +15,7 @@ const createRequestsTable = async (context, props, setState) => {
 
   // Create the year data table if not exist already
   const createSQL = `
-    CREATE TABLE IF NOT EXISTS ${tableNameByYear} (
+    CREATE TABLE IF NOT EXISTS requests (
       SRNumber VARCHAR,
       CreatedDate DATETIME,
       UpdatedDate DATETIME,
@@ -51,47 +53,27 @@ const createRequestsTable = async (context, props, setState) => {
     )
   `;
 
-  const startTime = performance.now(); // start the time tracker
+  const startTime = performance.now();
   setDbStartTime(startTime)
 
     try {
       await conn.query(createSQL);
-      const endTime = performance.now() // end the timer
+      const endTime = performance.now()
       console.log(`Dataset registration & table creation (by year) time: ${Math.floor(endTime - startTime)} ms.`);
     } catch (error) {
       console.error("Error in creating table or registering dataset:", error);
     } finally {
-      setState({ isTableLoading: false});
+      setState({ isTableLoading: false });
     }
 };
 
 export default createRequestsTable;
 
+
+
+
+// create `fetchData` function that console.logs DESCRIBE requestTable
 /**
- * What if we want to dynamically define the table structure without loading the data?
- *   We can modify the try-catch to read the schema from the parquet file to create the table:
- *
- *    try {
-        // Get schema without loading data
-        const schemaQuery = `DESCRIBE "${datasetFileName}"`;
-        const schemaResult = await conn.query(schemaQuery);
-        const schemaLines = schemaResult.toString().split('\n');
-
-        // Generate CREATE TABLE statement based on schema
-        const columnDefinitions = schemaLines
-          .map(line => line.trim().split(/\s+/))
-          .filter(parts => parts.length >= 2) // Ensure valid schema lines
-          .map(parts => `${parts[0]} ${parts[1]}`) // Convert to SQL column format
-          .join(', ');
-
-        const createSQL = `CREATE TABLE IF NOT EXISTS ${tableNameByYear} (${columnDefinitions})`;
-
-        await conn.query(createSQL);
-        const endTime = performance.now();
-        console.log(`Table creation time: ${Math.floor(endTime - startTime)} ms.`);
-      } catch (error) {
-        console.error("Error creating table:", error);
-      } finally {
-        setState({ isTableLoading: false });
-      }
+ * this is a placeholder function to request data when given a set of filter params. e.g., date range(s), SR type, SR status, NC
+ * it will replace the setData function in components/Map/index.jsx
  */
