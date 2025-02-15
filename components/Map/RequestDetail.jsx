@@ -77,18 +77,18 @@ function RequestDetail({
 
       if (startYear === endYear) {
         // If search date range is within the same year
-        const tableName = `requests_${startYear}`;
-        getPinsInfoSQL = `SELECT * FROM ${tableName} WHERE TRIM(SRNumber) = '${requestId}'`;
+        // const tableName = `requests_${startYear}`;
+        getPinsInfoSQL = `SELECT * FROM requests WHERE TRIM(SRNumber) = '${requestId}'`;
       } else {
         // If search date range is across two different years
-        const tableNameStartYear = `requests_${startYear}`;
-        const tableNameEndYear = `requests_${endYear}`;
+        // const tableNameStartYear = `requests_${startYear}`;
+        // const tableNameEndYear = `requests_${endYear}`;
 
-        getPinsInfoSQL = `
-          (SELECT * FROM ${tableNameStartYear} WHERE TRIM(SRNumber) = '${requestId}')
-          UNION ALL
-          (SELECT * FROM ${tableNameEndYear} WHERE TRIM(SRNumber) = '${requestId}')
-        `;
+        // getPinsInfoSQL = `
+        //   (SELECT * FROM ${tableNameStartYear} WHERE TRIM(SRNumber) = '${requestId}')
+        //   UNION ALL
+        //   (SELECT * FROM ${tableNameEndYear} WHERE TRIM(SRNumber) = '${requestId}')
+        // `;
       }
 
       const pinsInfoAsArrowTable = await conn.query(getPinsInfoSQL);
